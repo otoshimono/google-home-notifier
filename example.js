@@ -6,7 +6,7 @@ var app = express();
 const serverPort = 8091; // default port
 
 var deviceName = 'Google Home';
-var ip = '192.168.1.20'; // default IP
+var ip = '192.168.1.7'; // default IP
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -21,7 +21,7 @@ app.post('/google-home-notifier', urlencodedParser, function (req, res) {
      ip = req.query.ip;
   }
 
-  var language = 'pl'; // default language code
+  var language = 'ja'; // default language code
   if (req.query.language) {
     language;
   }
@@ -38,7 +38,8 @@ app.post('/google-home-notifier', urlencodedParser, function (req, res) {
           res.send(deviceName + ' will play sound from url: ' + mp3_url + '\n');
         });
       } else {
-        googlehome.notify(text, function(notifyRes) {
+        sanitized_text = text.replace(/^<@.*>/, '');
+        googlehome.notify(sanitized_text, function(notifyRes) {
           console.log(notifyRes);
           res.send(deviceName + ' will say: ' + text + '\n');
         });
@@ -63,7 +64,7 @@ app.get('/google-home-notifier', function (req, res) {
      ip = req.query.ip;
   }
 
-  var language = 'pl'; // default language code
+  var language = 'jp'; // default language code
   if (req.query.language) {
     language;
   }
