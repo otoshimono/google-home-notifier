@@ -6,7 +6,7 @@ var app = express();
 const serverPort = 8091; // default port
 
 var deviceName = 'Google Home';
-var ip = '192.168.1.7'; // default IP
+var ip = '192.168.1.74'; // default IP
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -96,14 +96,22 @@ app.get('/google-home-notifier', function (req, res) {
   }
 })
 
+
+
 app.listen(serverPort, function () {
-  ngrok.connect(serverPort, function (err, url) {
+  ngrok.connect({
+    proto: 'http', // http|tcp|tls
+    addr: serverPort, // port or network address
+    subdomain: 'mamorio-reception', // reserved tunnel name https://alex.ngrok.io
+    authtoken: '3GEuX6SdhjaqkW63qYQh5_5hPn2CY4U2Stiagb6vcJD', // your authtoken from ngrok.com
+    region: 'ap' // one of ngrok regions (us, eu, au, ap), defaults to us,
+  }, function (err, url) {
     console.log('Endpoints:');
     console.log('    http://' + ip + ':' + serverPort + '/google-home-notifier');
     console.log('    ' + url + '/google-home-notifier');
     console.log('GET example:');
     console.log('curl -X GET ' + url + '/google-home-notifier?text=Hello+Google+Home');
-	console.log('POST example:');
-	console.log('curl -X POST -d "text=Hello Google Home" ' + url + '/google-home-notifier');
+    console.log('POST example:');
+    console.log('curl -X POST -d "text=Hello Google Home" ' + url + '/google-home-notifier');
   });
 })
